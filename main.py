@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+# 1
 path_to_file = r'.\voetbal.xlsx'
 data = pd.read_excel(path_to_file)
 
@@ -43,21 +44,21 @@ def get_inzet_by_category(cat):
     else:
         return 'matig'
 
-
+# 2 en 3
 start_date = pd.to_datetime('2011-01-01')
 end_date = pd.to_datetime('2011-12-31')
 data['geboortedatum'] = random_datetimes_or_dates(start_date, end_date, out_format='not datetime', n=len(data.index))
 data['categorie'] = data['geboortedatum'].apply(lambda x: get_category(x.to_pydatetime().month))
 data['inzet'] = data['categorie'].apply(lambda x: get_inzet_by_category(x))
 
-# print(data['categorie'])
-
+# 4
 plot = data.plot.scatter(x='gewicht', y='lengte', c='DarkBlue')
 plot.set_xlim(19, 31)
 plot.set_ylim(110, 140)
 fig = plot.get_figure()
 fig.savefig('scatter.png')
 
+# 5
 bar_data = data.groupby(['positie', 'inzet'])['aantal gemaakte goalen'].sum().unstack()
 plot = bar_data.plot.bar(title='Aantal Goalen Per Positie en Inzet')
 plot.set_xlabel('Posities per Inzet')
@@ -66,27 +67,47 @@ fig = plot.get_figure()
 fig.tight_layout()
 fig.savefig('staaf_diagram.png')
 
+# 6
 gemiddelde = data['aantal gemaakte goalen'].mean()
 modus = data['aantal gemaakte goalen'].mode()
 print(gemiddelde)
 print(modus)
 
+# 7
 standaardafwijking = data['gewicht'].std()
 kwartiel1 = data['gewicht'].quantile(0.25)
 print(standaardafwijking)
 print(kwartiel1)
 
-# pie_data = data.groupby(['inzet'])['inzet'].count().to_frame().rename(columns={'inzet':'counts'}).reset_index()
+# 8
+pie_data = data.groupby(['positie'])['aantal gemaakte goalen'].sum().to_frame().rename(columns={'positie':'aantal gemaakte goalen'}).reset_index()
+plot = pie_data.plot.pie(y='aantal gemaakte goalen', labels=pie_data['aantal gemaakte goalen'], figsize=(8, 6))
+plot.legend(pie_data['positie'], loc=3)
+fig = plot.get_figure()
+fig.savefig('somecircle.png')
+# hoe verder in het veld hoe meer ze scoren
+# hoe nagegaan: logica!
 
-# pie_df = pd.DataFrame(dict(inzet=pie_data.index, count=pie_data.values))
-# pie_data = data.groupby(data.inzet)['inzet'].sum().unstack()
-# pie_data.plot(kind='pie', subplots=True, y='inzet')
-# plt.pie(pie_data, labels=pie_data.index)
+# 9
+pie_data = data.groupby(['inzet'])['inzet'].count().to_frame().rename(columns={'inzet':'counts'}).reset_index()
+plot = pie_data.plot.pie(y='counts', labels=pie_data['inzet'], legend=False)
+fig = plot.get_figure()
+fig.tight_layout()
+fig.savefig('circle.png')
 
-# plot = pie_data.plot.pie(subplots=True)
-# fig = plot.get_figure()
-# fig.savefig('circle.png')
-# print(pie_data)
+# 10
+posities = ['linkervleugel', 'rechtervleugel', 'piloot']
+box_data = data.loc[data['positie'].isin(posities)]
+plot = box_data.boxplot(by='positie', column=['aantal gemaakte goalen'], figsize=(8, 6))
+plot.set_title("Aantal Gemaakte Goals per Positie", fontsize=16)
+plot.set_xlabel("Positie", fontsize=14)
+plot.set_ylabel("Aantal gemaakte goals", fontsize=14)
+plt.suptitle("")
+fig = plot.get_figure()
+fig.tight_layout()
+fig.savefig('boxplot.png')
 
-# plt.show()
+plt.show()
+
+
 
