@@ -68,12 +68,16 @@ fig.savefig('staaf_diagram.png')
 
 gemiddelde = data['aantal gemaakte goalen'].mean()
 modus = data['aantal gemaakte goalen'].mode()
+print("gemiddelde:")
 print(gemiddelde)
+print("modus:")
 print(modus)
 
 standaardafwijking = data['gewicht'].std()
 kwartiel1 = data['gewicht'].quantile(0.25)
+print("standaardafwijking:")
 print(standaardafwijking)
+print("kwartiel 1:")
 print(kwartiel1)
 
 # pie_data = data.groupby(['inzet'])['inzet'].count().to_frame().rename(columns={'inzet':'counts'}).reset_index()
@@ -82,7 +86,7 @@ print(kwartiel1)
 # pie_data = data.groupby(data.inzet)['inzet'].sum().unstack()
 # pie_data.plot(kind='pie', subplots=True, y='inzet')
 # plt.pie(pie_data, labels=pie_data.index)
-
+#
 # plot = pie_data.plot.pie(subplots=True)
 # fig = plot.get_figure()
 # fig.savefig('circle.png')
