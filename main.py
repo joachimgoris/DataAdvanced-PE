@@ -86,8 +86,9 @@ fig.tight_layout()  # groote van diagram aanpassen aan groote van export foto
 fig.savefig('staaf_diagram.png')
 
 # 6 - Gemiddelde en modus van de kolom 'aantal gemaakte goalen' per positie    TODO ------------------------------
-gemiddelde = data['aantal gemaakte goalen'].mean()
-modus = data['aantal gemaakte goalen'].mode()
+new_data = data.groupby('positie')['aantal gemaakte goalen'].sum().to_frame()
+gemiddelde = new_data['aantal gemaakte goalen'].mean()
+modus = new_data['aantal gemaakte goalen'].mode()
 print("gemiddelde: ", round(float(gemiddelde), 2))
 print("modus: ", round(float(modus[0]), 20))
 print("\n")
